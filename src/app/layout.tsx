@@ -1,6 +1,14 @@
 import type { Metadata } from "next";
+import {
+  ClerkProvider,
+  Show,
+  SignInButton,
+  SignUpButton,
+  UserButton,
+} from "@clerk/nextjs";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
+import { clerkAppearance } from "@/lib/clerk-appearance";
 import { cn } from "@/lib/utils";
 
 const inter = Inter({subsets:['latin'],variable:'--font-sans'});
@@ -30,7 +38,20 @@ export default function RootLayout({
       lang="en"
       className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, "font-sans", inter.variable)}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <ClerkProvider appearance={clerkAppearance}>
+          <header className="flex items-center justify-end gap-3 border-b px-6 py-3">
+            <Show when="signed-out">
+              <SignInButton mode="modal" />
+              <SignUpButton mode="modal" />
+            </Show>
+            <Show when="signed-in">
+              <UserButton />
+            </Show>
+          </header>
+          {children}
+        </ClerkProvider>
+      </body>
     </html>
   );
 }

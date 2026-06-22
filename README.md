@@ -1,8 +1,22 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Tech stack
+
+- [Next.js 16](https://nextjs.org) (App Router)
+- [React 19](https://react.dev)
+- [Tailwind CSS v4](https://tailwindcss.com)
+- [shadcn/ui](https://ui.shadcn.com)
+- [Clerk](https://clerk.com) authentication
+
 ## Getting Started
 
-First, run the development server:
+Copy the example env file and add your Clerk keys from the [Clerk Dashboard](https://dashboard.clerk.com/):
+
+```bash
+cp .env.example .env.local
+```
+
+Then run the development server:
 
 ```bash
 npm run dev
