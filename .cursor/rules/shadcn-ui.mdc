@@ -1,0 +1,36 @@
+---
+description: Use shadcn/ui for UI components; install via the shadcn MCP server
+alwaysApply: true
+---
+
+# shadcn/ui
+
+This project uses [shadcn/ui](https://ui.shadcn.com) as its component library.
+
+## Component usage
+
+- Prefer shadcn/ui components over custom-built primitives (buttons, inputs, dialogs, etc.).
+- Import from `@/components/ui/*` after installation.
+- Use `cn()` from `@/lib/utils` to merge Tailwind classes.
+- Extend behavior by composing shadcn components; avoid editing files in `src/components/ui/` unless customizing design tokens.
+
+## Installing components
+
+Use the **shadcn MCP server** (`plugin-shadcn-shadcn`) to discover and install components:
+
+1. **Search** — `search_items_in_registries` to find components by name or purpose.
+2. **Examples** — `get_item_examples_from_registries` for usage patterns (e.g. `"button-demo"`, `"dialog example"`).
+3. **Add command** — `get_add_command_for_items` with registry-prefixed names (e.g. `["@shadcn/button", "@shadcn/card"]`).
+4. **Install** — run the returned CLI command in the project root.
+
+If `components.json` is missing, initialize shadcn first:
+
+```bash
+npx shadcn@latest init
+```
+
+## Conventions
+
+- Place installed components in `src/components/ui/`.
+- Place shared app components in `src/components/`.
+- Match existing Tailwind v4 and Next.js App Router patterns in this repo.
