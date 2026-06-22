@@ -7,14 +7,21 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 - [Tailwind CSS v4](https://tailwindcss.com)
 - [shadcn/ui](https://ui.shadcn.com)
 - [Clerk](https://clerk.com) authentication
+- [Drizzle ORM](https://orm.drizzle.team) with [Neon](https://neon.tech) PostgreSQL
 
 ## Getting Started
 
-Copy the example env file and add your Clerk keys from the [Clerk Dashboard](https://dashboard.clerk.com/):
+Copy the example env file and add your Clerk keys from the [Clerk Dashboard](https://dashboard.clerk.com/) and your Neon database URL from the [Neon Console](https://console.neon.tech/):
 
 ```bash
-cp .env.example .env.local
+cp .env.example .env
 ```
+
+Required environment variables:
+
+- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` — Clerk publishable key
+- `CLERK_SECRET_KEY` — Clerk secret key
+- `DATABASE_URL` — Neon PostgreSQL connection string (pooler URL recommended)
 
 Then run the development server:
 
@@ -29,6 +36,17 @@ bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## Database
+
+Schema lives in `src/db/schema.ts`. The Drizzle client is exported from `src/db/index.ts` for use in Server Components, Route Handlers, and Server Actions.
+
+```bash
+npm run db:generate  # generate SQL migrations from schema changes
+npm run db:migrate   # apply migrations
+npm run db:push      # push schema directly (handy for local dev)
+npm run db:studio    # open Drizzle Studio
+```
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
