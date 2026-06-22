@@ -21,7 +21,15 @@ Required environment variables:
 
 - `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` — Clerk publishable key
 - `CLERK_SECRET_KEY` — Clerk secret key
+- `NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL` — redirect after sign-in (default: `/everyday-banking`)
+- `NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL` — redirect after sign-up (default: `/everyday-banking`)
 - `DATABASE_URL` — Neon PostgreSQL connection string (pooler URL recommended)
+
+After signing in, users are redirected to `/everyday-banking`. Seed demo banking data with your Clerk user ID:
+
+```bash
+npm run db:seed -- user_YOUR_CLERK_ID
+```
 
 Then run the development server:
 

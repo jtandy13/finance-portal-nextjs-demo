@@ -6,7 +6,7 @@ const features = [
     title: "Unified Banking",
     description:
       "High-yield checking and savings accounts integrated directly with your investment platform. Enjoy instant transfers and holistic financial visibility without the friction of multiple institutions.",
-    href: "#banking",
+    href: "/everyday-banking",
     linkLabel: "Explore Banking",
     icon: Landmark,
     className: "md:col-span-5",
