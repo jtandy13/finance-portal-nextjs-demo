@@ -1,0 +1,30 @@
+---
+description: Use Google Stitch MCP for UI designs; fetch project and screen details when the user refers to designs
+alwaysApply: true
+---
+
+# Google Stitch Designs
+
+This project uses [Google Stitch](https://stitch.withgoogle.com) for UI designs. When the user refers to **"the designs"**, a **screen**, a **mockup**, or a **Stitch project**, treat Stitch as the source of truth — do not guess layout, copy, or styling from memory.
+
+## MCP server
+
+Use the **Stitch MCP server** (`user-stitch`). Always read the tool schema in `mcps/user-stitch/tools/` before calling a tool.
+
+## Typical workflow
+
+1. **Find the project** — `list_projects` (default `view=owned`). Match the finance portal project by name or context from the user's message.
+2. **List screens** — `list_screens` with the project ID (numeric ID only, no `projects/` prefix).
+3. **Fetch the screen** — `get_screen` with `name` in the form `projects/{projectId}/screens/{screenId}`. Match the screen the user means by name, route, or description.
+4. **Design system (if needed)** — `list_design_systems` for tokens, colors, and typography tied to the project.
+
+## When to fetch
+
+- User says "match the design", "implement the designs", "build this screen", or names a Stitch screen/project.
+- UI work where layout, spacing, colors, or copy should match Stitch.
+- Ambiguity about which screen — list screens first, then ask only if multiple matches remain.
+
+## Implementation
+
+- Use fetched screen details (structure, assets, specs) to guide shadcn/ui components and Tailwind classes in this repo.
+- Prefer Stitch specs over assumptions; if a detail is missing from Stitch, say so before inventing it.
