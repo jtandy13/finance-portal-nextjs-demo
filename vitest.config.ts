@@ -20,6 +20,12 @@ export default defineConfig({
         '**/mockData',
         '.next/',
       ],
+      thresholds: {
+        statements: 80,
+        branches: 85,
+        functions: 55,
+        lines: 80,
+      },
     },
   },
   resolve: {

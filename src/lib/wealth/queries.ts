@@ -4,6 +4,7 @@ import { desc, eq } from "drizzle-orm";
 
 import { db } from "@/db";
 import { securities, securityQuotes } from "@/db/schema";
+import { dedupeLatestQuotesBySymbol } from "@/lib/wealth/quotes";
 
 export async function getWealthOverview(userId: string) {
   const portfolio = await db.query.portfolios.findFirst({
@@ -27,19 +28,8 @@ export async function getWealthOverview(userId: string) {
     .innerJoin(securityQuotes, eq(securityQuotes.securityId, securities.id))
     .orderBy(desc(securityQuotes.asOf));
 
-  const latestQuotesBySymbol = new Map<
-    string,
-    (typeof marketMovers)[number]
-  >();
-
-  for (const quote of marketMovers) {
-    if (!latestQuotesBySymbol.has(quote.symbol)) {
-      latestQuotesBySymbol.set(quote.symbol, quote);
-    }
-  }
-
   return {
     portfolio,
-    marketMovers: [...latestQuotesBySymbol.values()],
+    marketMovers: dedupeLatestQuotesBySymbol(marketMovers),
   };
 }

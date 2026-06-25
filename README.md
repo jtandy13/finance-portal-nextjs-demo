@@ -8,6 +8,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 - [shadcn/ui](https://ui.shadcn.com)
 - [Clerk](https://clerk.com) authentication
 - [Drizzle ORM](https://orm.drizzle.team) with [Neon](https://neon.tech) PostgreSQL
+- [Zod](https://zod.dev) for input validation
 - [Vitest](https://vitest.dev) with [React Testing Library](https://testing-library.com/react) for testing
 
 ## Getting Started
@@ -54,13 +55,15 @@ This project uses Vitest with React Testing Library. Test files should be placed
 npm run test          # run tests in watch mode
 npm run test:ui       # run tests with Vitest UI
 npm run test:run      # run tests once (CI mode)
-npm run test:coverage # generate coverage report
+npm run test:coverage # generate coverage report (enforces thresholds)
 ```
 
-Example test files:
-- `src/lib/format.test.ts` — utility function tests
-- `src/lib/utils.test.ts` — tailwind merge utility tests
-- `src/components/ui/button.test.tsx` — component tests
+Testing approach:
+
+- **Pure logic** is extracted into testable modules and unit tested directly, e.g. `src/lib/banking/metrics.ts`, `src/lib/wealth/quotes.ts`, and `src/lib/banking/transfer-schema.ts` (Zod-based transfer validation).
+- **Server actions and auth** (`src/lib/banking/actions.ts`, `src/lib/auth.ts`) are tested with the database, Clerk, and `next/cache` mocked via `vi.mock`.
+- **Components** are rendered with React Testing Library; shared fixtures live in `src/test/factories.ts`.
+- Coverage thresholds are enforced in `vitest.config.ts`.
 
 ## Database
 

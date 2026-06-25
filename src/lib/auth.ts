@@ -62,5 +62,12 @@ export async function getAuthenticatedUser() {
 
   await provisionDefaultAccounts(createdUser.id);
 
-  return createdUser;
+  const provisionedUser = await db.query.users.findFirst({
+    where: eq(users.clerkId, userId),
+    with: {
+      accounts: true,
+    },
+  });
+
+  return provisionedUser ?? { ...createdUser, accounts: [] };
 }

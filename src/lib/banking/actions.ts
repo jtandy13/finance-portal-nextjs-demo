@@ -6,6 +6,7 @@ import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { accounts, transfers } from "@/db/schema";
 import { getAuthenticatedUser } from "@/lib/auth";
+import { validateTransferInput } from "@/lib/banking/transfer-schema";
 
 export type TransferActionState = {
   error?: string;
@@ -21,26 +22,12 @@ export async function createTransfer(
     return { error: "You must be signed in to transfer funds." };
   }
 
-  const fromAccountId = formData.get("fromAccountId");
-  const toAccountId = formData.get("toAccountId");
-  const amountRaw = formData.get("amount");
-
-  if (
-    typeof fromAccountId !== "string" ||
-    typeof toAccountId !== "string" ||
-    typeof amountRaw !== "string"
-  ) {
-    return { error: "Invalid transfer details." };
+  const validation = validateTransferInput(formData);
+  if (!validation.success) {
+    return { error: validation.error };
   }
 
-  if (fromAccountId === toAccountId) {
-    return { error: "Choose two different accounts." };
-  }
-
-  const amount = Number.parseFloat(amountRaw);
-  if (!Number.isFinite(amount) || amount <= 0) {
-    return { error: "Enter a valid transfer amount." };
-  }
+  const { fromAccountId, toAccountId, amount } = validation.data;
 
   const userAccounts = await db.query.accounts.findMany({
     where: eq(accounts.userId, user.id),

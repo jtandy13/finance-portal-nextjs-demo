@@ -4,24 +4,11 @@ import { and, desc, eq, gte, inArray, lt } from "drizzle-orm";
 
 import { db } from "@/db";
 import { accounts, transactions } from "@/db/schema";
-
-function monthRange(year: number, month: number) {
-  const start = new Date(year, month, 1);
-  const end = new Date(year, month + 1, 1);
-  return {
-    start: start.toISOString().slice(0, 10),
-    end: end.toISOString().slice(0, 10),
-  };
-}
-
-function sumNegativeSpend(
-  rows: Array<{ amount: string }>,
-) {
-  return rows.reduce((total, row) => {
-    const amount = Number.parseFloat(row.amount);
-    return amount < 0 ? total + Math.abs(amount) : total;
-  }, 0);
-}
+import {
+  computeMonthlySpendTrend,
+  monthRange,
+  sumNegativeSpend,
+} from "@/lib/banking/metrics";
 
 export async function getBankingOverview(userId: string) {
   const userAccounts = await db.query.accounts.findMany({
@@ -78,9 +65,7 @@ export async function getBankingOverview(userId: string) {
     monthlySpend = sumNegativeSpend(currentMonthRows);
     const previousSpend = sumNegativeSpend(previousMonthRows);
 
-    if (previousSpend > 0) {
-      monthlySpendTrend = ((monthlySpend - previousSpend) / previousSpend) * 100;
-    }
+    monthlySpendTrend = computeMonthlySpendTrend(monthlySpend, previousSpend);
   }
 
   return {
