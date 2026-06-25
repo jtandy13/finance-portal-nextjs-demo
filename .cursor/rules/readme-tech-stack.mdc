@@ -1,34 +1,25 @@
 ---
-description: Update README.md whenever the project tech stack changes
+description: Delegate root-level documentation updates to the docs-maintainer subagent when the codebase changes
 alwaysApply: true
 ---
 
-# README Tech Stack Sync
+# Documentation Sync
 
-When the project's tech stack changes, update `README.md` in the same session so GitHub reflects the current setup.
+When the project changes in a way that affects how others build, run, develop, or understand it, the repository's root-level documentation (`README.md`, `CHANGELOG.md`) must be kept in sync. This work is owned by the `docs-maintainer` subagent — delegate to it rather than editing docs inline.
 
-## What counts as a tech stack change
+## What counts as a documentation-affecting change
 
 - Adding, removing, or replacing major dependencies (frameworks, UI libraries, databases, auth, ORMs, testing tools)
 - Changing runtime, package manager, or build tooling (e.g. Node version, npm → pnpm, Vite → Next.js)
 - Adding or removing services (e.g. Neon, Vercel, Stripe, Supabase)
 - Changing deployment, environment, or infrastructure setup
 - Updating project structure that affects how others run or develop the app
-
-## What to update in README.md
-
-Keep the README accurate and useful for contributors. At minimum, review and update:
-
-- **Tech stack** — list frameworks, libraries, and services in use
-- **Prerequisites** — Node version, package manager, required accounts or CLI tools
-- **Getting started** — install, env setup (`.env.example`), and dev commands
-- **Scripts** — document new or changed `package.json` scripts
-- **Deployment** — hosting platform and deploy steps if they changed
+- Introducing a new feature or making a significant architectural change
 
 ## Workflow
 
-1. Make the tech stack change (e.g. add a dependency, switch a service).
-2. Before finishing, update `README.md` to match.
-3. If `.env.example` or setup steps changed, update those sections too.
+1. Make the code change (e.g. add a dependency, ship a feature, switch a service).
+2. When any documentation-affecting change above is detected, do NOT edit `README.md` or `CHANGELOG.md` directly.
+3. Delegate documentation updates to the `docs-maintainer` subagent (via the Task tool). The subagent owns the full scope of what to update — tech stack, prerequisites, getting started, environment variables, scripts, deployment, architecture, and `CHANGELOG.md` entries.
 
-Do not leave README.md describing a stack that no longer matches the codebase.
+Do not leave `README.md` (or other root docs) describing a stack, setup, or behavior that no longer matches the codebase.
