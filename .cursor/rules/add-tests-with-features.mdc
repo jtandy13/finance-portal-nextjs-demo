@@ -1,0 +1,51 @@
+---
+description: Add Vitest tests when shipping new features and components
+alwaysApply: true
+---
+
+# Tests for New Features and Components
+
+When adding or changing behavior in this project, add or update tests in the same change. Do not ship new features or UI without meaningful coverage.
+
+## When to add tests
+
+| Change | Test approach |
+|--------|---------------|
+| New React component | Colocated `*.test.tsx` with React Testing Library |
+| Pure logic (utils, schemas, metrics) | Colocated `*.test.ts` unit tests |
+| Server actions / auth | Colocated tests with `vi.mock` for DB, Clerk, `next/cache` |
+| Bug fix | Regression test that fails without the fix |
+
+Skip tests only for trivial, non-behavioral changes (copy, styling-only tweaks with no logic).
+
+## Conventions
+
+- **Colocate** — place `foo.test.ts` or `foo.test.tsx` next to `foo.ts` / `foo.tsx`.
+- **Fixtures** — reuse shared data from `src/test/factories.ts`.
+- **Extract logic** — keep complex logic in `src/lib/` modules so it can be unit tested directly.
+- **Run locally** — `npm run test:run` before finishing (CI runs tests on push).
+
+## Examples
+
+```tsx
+// ✅ Component test — src/components/banking/summary-cards.test.tsx
+import { render, screen } from "@testing-library/react";
+import { SummaryCards } from "./summary-cards";
+
+it("formats balances as currency", () => {
+  render(<SummaryCards checkingBalance="12450.80" /* ... */ />);
+  expect(screen.getByText("$12,450.80")).toBeInTheDocument();
+});
+```
+
+```ts
+// ✅ Logic test — src/lib/banking/transfer-schema.test.ts
+import { describe, it, expect } from "vitest";
+import { transferSchema } from "./transfer-schema";
+
+it("rejects amounts over the daily limit", () => {
+  expect(transferSchema.safeParse({ amount: 99999 }).success).toBe(false);
+});
+```
+
+Coverage thresholds are enforced in `vitest.config.ts` — new code should not lower overall coverage.
