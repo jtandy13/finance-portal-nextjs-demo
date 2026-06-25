@@ -8,6 +8,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 - [shadcn/ui](https://ui.shadcn.com)
 - [Clerk](https://clerk.com) authentication
 - [Drizzle ORM](https://orm.drizzle.team) with [Neon](https://neon.tech) PostgreSQL
+- [Vitest](https://vitest.dev) with [React Testing Library](https://testing-library.com/react) for testing
 
 ## Getting Started
 
@@ -44,6 +45,22 @@ bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## Testing
+
+This project uses Vitest with React Testing Library. Test files should be placed alongside the code they test with `.test.ts` or `.test.tsx` extensions.
+
+```bash
+npm run test          # run tests in watch mode
+npm run test:ui       # run tests with Vitest UI
+npm run test:run      # run tests once (CI mode)
+npm run test:coverage # generate coverage report
+```
+
+Example test files:
+- `src/lib/format.test.ts` — utility function tests
+- `src/lib/utils.test.ts` — tailwind merge utility tests
+- `src/components/ui/button.test.tsx` — component tests
 
 ## Database
 
