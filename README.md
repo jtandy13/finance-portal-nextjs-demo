@@ -65,6 +65,18 @@ Testing approach:
 - **Components** are rendered with React Testing Library; shared fixtures live in `src/test/factories.ts`.
 - Coverage thresholds are enforced in `vitest.config.ts`.
 
+## Linting & type checking
+
+ESLint (flat config via `eslint-config-next`) and the TypeScript compiler enforce code quality.
+
+```bash
+npm run lint       # report lint issues
+npm run lint:fix   # auto-fix fixable lint issues
+npm run typecheck  # type-only check (tsc --noEmit)
+```
+
+CI runs both `npm run lint` and `npm run typecheck`, and a failure blocks deployment.
+
 ## Database
 
 Schema lives in `src/db/schema.ts`. The Drizzle client is exported from `src/db/index.ts` for use in Server Components, Route Handlers, and Server Actions.
@@ -97,4 +109,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ## CI/CD
 
-On every push, the [Deploy Project](.github/workflows/deploy-project.yml) GitHub Actions workflow runs tests, builds the project, and runs a placeholder deploy step. Configure repository secrets if the build step needs env vars (Clerk, `DATABASE_URL`, etc.).
+On every push, the [Deploy Project](.github/workflows/deploy-project.yml) GitHub Actions workflow runs tests, lints and type-checks the code, builds the project, and runs a placeholder deploy step. The deploy step depends on both the test and lint jobs, so a failing test, lint error, or type error blocks deployment. Configure repository secrets if the build step needs env vars (Clerk, `DATABASE_URL`, etc.).
