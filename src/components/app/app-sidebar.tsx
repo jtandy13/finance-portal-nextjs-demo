@@ -33,9 +33,9 @@ const navItems: Array<{
   },
   {
     label: "Investing",
-    href: "#",
+    href: "/wealth-management",
+    activePath: "/wealth-management",
     icon: TrendingUp,
-    disabled: true,
   },
   {
     label: "Transfers",
