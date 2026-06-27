@@ -27,7 +27,7 @@ const navItems: Array<{
   },
   {
     label: "Accounts",
-    href: "/everyday-banking",
+    href: "/accounts",
     activePath: "/accounts",
     icon: Landmark,
   },

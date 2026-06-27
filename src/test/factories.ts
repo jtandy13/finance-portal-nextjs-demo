@@ -8,11 +8,12 @@ function nextId(prefix: string) {
 export type AccountFixture = {
   id: string;
   userId: string;
-  type: "checking" | "savings";
+  type: "checking" | "savings" | "credit_card";
   name: string;
   accountNumberLast4: string;
   balance: string;
   currency: string;
+  creditLimit?: string | null;
 };
 
 export function makeAccount(overrides: Partial<AccountFixture> = {}): AccountFixture {

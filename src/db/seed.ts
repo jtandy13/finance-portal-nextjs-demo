@@ -77,16 +77,24 @@ async function seed() {
       {
         userId: user.id,
         type: "checking",
-        name: "Checking",
-        accountNumberLast4: "1234",
-        balance: "12450.80",
+        name: "Premium Checking",
+        accountNumberLast4: "8492",
+        balance: "45230.00",
       },
       {
         userId: user.id,
         type: "savings",
-        name: "Savings",
-        accountNumberLast4: "5678",
-        balance: "45210.00",
+        name: "High-Yield Savings",
+        accountNumberLast4: "1120",
+        balance: "12500.00",
+      },
+      {
+        userId: user.id,
+        type: "credit_card",
+        name: "Corporate Platinum Card",
+        accountNumberLast4: "4431",
+        balance: "12450.00",
+        creditLimit: "49800.00",
       },
     ])
     .returning();
@@ -167,6 +175,22 @@ async function seed() {
     { portfolioId: portfolio.id, assetClass: "real_estate", percentage: "10.00" },
     { portfolioId: portfolio.id, assetClass: "cash", percentage: "5.00" },
   ]);
+
+  const totalDepositBalance = 57730;
+  const snapshotRows = Array.from({ length: 30 }, (_, index) => {
+    const date = new Date();
+    date.setDate(date.getDate() - (29 - index));
+    const progress = index / 29;
+    const balance = (totalDepositBalance - 4320.5 + progress * 4320.5).toFixed(2);
+
+    return {
+      userId: user.id,
+      snapshotDate: date.toISOString().slice(0, 10),
+      totalBalance: balance,
+    };
+  });
+
+  await db.insert(schema.balanceSnapshots).values(snapshotRows);
 
   console.log("Seed completed successfully.");
   console.log(`Seeded user clerkId: ${clerkId}`);

@@ -67,6 +67,7 @@ export async function createTransfer(
     .where(eq(accounts.id, toAccount.id));
 
   revalidatePath("/everyday-banking");
+  revalidatePath("/accounts");
 
   return { success: "Transfer completed successfully." };
 }
