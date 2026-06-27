@@ -10,6 +10,15 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 - [Drizzle ORM](https://orm.drizzle.team) with [Neon](https://neon.tech) PostgreSQL
 - [Zod](https://zod.dev) for input validation
 - [Vitest](https://vitest.dev) with [React Testing Library](https://testing-library.com/react) for testing
+- [Material Symbols](https://fonts.google.com/icons) (loaded via Google Fonts) for iconography
+
+## Features
+
+- **Everyday Banking** (`/everyday-banking`) — checking/savings overview, transfers, and transactions.
+- **Accounts** (`/accounts`) — an Accounts Overview with a total available balance summary, deposit account and credit card lists, account insights (liquidity distribution + 30-day balance trend chart), and quick actions.
+- **Wealth Management** (`/wealth-management`) — portfolio holdings and allocation.
+
+All app routes (`/everyday-banking`, `/wealth-management`, `/accounts`) are protected by Clerk middleware in `src/proxy.ts`.
 
 ## Getting Started
 
@@ -32,6 +41,8 @@ After signing in, users are redirected to `/everyday-banking`. Seed demo banking
 ```bash
 npm run db:seed -- user_YOUR_CLERK_ID
 ```
+
+> **Warning:** `db:seed` is destructive — it wipes and recreates the target demo user's rows (accounts, transactions, portfolios, and 30 days of `balance_snapshots`). Run it only intentionally. The demo user is seeded with a Premium Checking, a High-Yield Savings, and a Corporate Platinum credit card account.
 
 Then run the development server:
 
@@ -60,7 +71,7 @@ npm run test:coverage # generate coverage report (enforces thresholds)
 
 Testing approach:
 
-- **Pure logic** is extracted into testable modules and unit tested directly, e.g. `src/lib/banking/metrics.ts`, `src/lib/wealth/quotes.ts`, and `src/lib/banking/transfer-schema.ts` (Zod-based transfer validation).
+- **Pure logic** is extracted into testable modules and unit tested directly, e.g. `src/lib/banking/metrics.ts`, `src/lib/accounts/metrics.ts` (liquidity distribution and day-change metrics), `src/lib/wealth/quotes.ts`, and `src/lib/banking/transfer-schema.ts` (Zod-based transfer validation).
 - **Server actions and auth** (`src/lib/banking/actions.ts`, `src/lib/auth.ts`) are tested with the database, Clerk, and `next/cache` mocked via `vi.mock`.
 - **Components** are rendered with React Testing Library; shared fixtures live in `src/test/factories.ts`.
 - Coverage thresholds are enforced in `vitest.config.ts`.
@@ -80,6 +91,8 @@ CI runs both `npm run lint` and `npm run typecheck`, and a failure blocks deploy
 ## Database
 
 Schema lives in `src/db/schema.ts`. The Drizzle client is exported from `src/db/index.ts` for use in Server Components, Route Handlers, and Server Actions.
+
+Notable tables include `users`, `accounts`, `transactions`, `transfers`, `portfolios`, and `balance_snapshots`. The `account_type` enum supports `checking`, `savings`, and `credit_card` (credit accounts carry a `credit_limit`). `balance_snapshots` stores a per-day `total_balance` history (one row per user per day, enforced by a unique index) that powers the 30-day balance trend chart on the Accounts page.
 
 ```bash
 npm run db:generate  # generate SQL migrations from schema changes

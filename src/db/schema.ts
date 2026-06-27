@@ -13,6 +13,7 @@ import {
 export const accountTypeEnum = pgEnum("account_type", [
   "checking",
   "savings",
+  "credit_card",
 ]);
 
 export const transferStatusEnum = pgEnum("transfer_status", [
@@ -52,6 +53,7 @@ export const accounts = pgTable("accounts", {
   name: text("name").notNull(),
   accountNumberLast4: text("account_number_last4").notNull(),
   balance: numeric("balance", { precision: 14, scale: 2 }).notNull(),
+  creditLimit: numeric("credit_limit", { precision: 14, scale: 2 }),
   currency: text("currency").notNull().default("USD"),
   createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()
@@ -96,6 +98,31 @@ export const transactions = pgTable("transactions", {
     .notNull()
     .$onUpdate(() => new Date()),
 });
+
+export const balanceSnapshots = pgTable(
+  "balance_snapshots",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    snapshotDate: date("snapshot_date").notNull(),
+    totalBalance: numeric("total_balance", { precision: 16, scale: 2 }).notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => [
+    uniqueIndex("balance_snapshots_user_id_snapshot_date_idx").on(
+      table.userId,
+      table.snapshotDate,
+    ),
+  ],
+);
 
 export const transfers = pgTable("transfers", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -201,8 +228,16 @@ export const securityQuotes = pgTable("security_quotes", {
 
 export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
+  balanceSnapshots: many(balanceSnapshots),
   transfers: many(transfers),
   portfolios: many(portfolios),
+}));
+
+export const balanceSnapshotsRelations = relations(balanceSnapshots, ({ one }) => ({
+  user: one(users, {
+    fields: [balanceSnapshots.userId],
+    references: [users.id],
+  }),
 }));
 
 export const accountsRelations = relations(accounts, ({ one, many }) => ({
