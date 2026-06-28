@@ -17,7 +17,6 @@ jobs:
       - name: Run tests
         run: npm test
   integration:
-    environment: integration
     runs-on: ubuntu-latest
     steps:
       - name: Get code
