@@ -1,0 +1,19 @@
+---
+description: Run unit tests and lint before pushing to git
+alwaysApply: true
+---
+
+# Pre-Push Checks
+
+Before running `git push` (to any branch or remote), you MUST run unit tests and lint checks first:
+
+```bash
+npm run lint && npm run test:run
+```
+
+## Rules
+
+- If **either** command fails (non-zero exit, lint errors, or failing tests), **DO NOT push**.
+- Report the failure to the user and stop — do not attempt to bypass with `--no-verify` or by skipping checks.
+- Only run `git push` after both `npm run lint` and `npm run test:run` pass cleanly.
+- This applies even when the user explicitly asks to push; surface the failing checks instead of pushing.
