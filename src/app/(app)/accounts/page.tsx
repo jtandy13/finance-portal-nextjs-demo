@@ -5,7 +5,6 @@ import { AccountInsights } from "@/components/accounts/account-insights";
 import { AccountListSection } from "@/components/accounts/account-list-section";
 import { AccountsQuickActions } from "@/components/accounts/accounts-quick-actions";
 import { TotalBalanceSummary } from "@/components/accounts/total-balance-summary";
-import { BankingViewTabs } from "@/components/banking/banking-view-tabs";
 import { getAuthenticatedUser } from "@/lib/auth";
 import { getAccountsOverview } from "@/lib/accounts/queries";
 
@@ -25,9 +24,7 @@ export default async function AccountsPage() {
 
   return (
     <main className="mx-auto min-h-[calc(100vh-4rem)] max-w-[90rem] p-8">
-      <BankingViewTabs />
-
-      <div className="mt-6 flex flex-col gap-8">
+      <div className="flex flex-col gap-8">
         <div>
           <h2 className="text-3xl font-semibold tracking-tight text-foreground">
             Accounts Overview

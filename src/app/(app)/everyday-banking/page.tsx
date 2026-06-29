@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
-import { BankingViewTabs } from "@/components/banking/banking-view-tabs";
 import { QuickTransferForm } from "@/components/banking/quick-transfer-form";
 import { RecentTransactions } from "@/components/banking/recent-transactions";
 import { SummaryCards } from "@/components/banking/summary-cards";
@@ -24,9 +23,7 @@ export default async function EverydayBankingPage() {
 
   return (
     <main className="mx-auto min-h-[calc(100vh-4rem)] max-w-[90rem] p-8">
-      <BankingViewTabs />
-
-      <div className="mt-6 flex flex-col gap-6">
+      <div className="flex flex-col gap-6">
         <SummaryCards
           checkingBalance={overview.checkingAccount?.balance ?? null}
           savingsBalance={overview.savingsAccount?.balance ?? null}
