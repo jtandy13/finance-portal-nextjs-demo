@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
-import { BankingViewTabs } from "@/components/banking/banking-view-tabs";
 import { AssetAllocation } from "@/components/wealth/asset-allocation";
 import { MarketMovers } from "@/components/wealth/market-movers";
 import { PortfolioSummary } from "@/components/wealth/portfolio-summary";
@@ -24,9 +23,7 @@ export default async function WealthManagementPage() {
 
   return (
     <main className="mx-auto min-h-[calc(100vh-4rem)] max-w-[90rem] p-8">
-      <BankingViewTabs />
-
-      <div className="mt-6 flex flex-col gap-6">
+      <div className="flex flex-col gap-6">
         {overview.portfolio ? (
           <PortfolioSummary
             totalValue={overview.portfolio.totalValue}
