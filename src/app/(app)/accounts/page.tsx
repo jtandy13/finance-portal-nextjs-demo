@@ -39,6 +39,12 @@ export default async function AccountsPage() {
             <TotalBalanceSummary
               totalBalance={overview.totalAvailableBalance}
               dayChange={overview.dayChange}
+              accounts={overview.accounts.map((account) => ({
+                id: account.id,
+                name: account.name,
+                accountNumberLast4: account.accountNumberLast4,
+                balance: account.balance,
+              }))}
             />
             <AccountListSection
               title="Deposit Accounts"

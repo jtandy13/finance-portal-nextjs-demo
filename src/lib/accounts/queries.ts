@@ -39,6 +39,7 @@ export async function getAccountsOverview(userId: string) {
   const dayChange = computeDayChange(snapshots);
 
   return {
+    accounts: userAccounts,
     depositAccounts,
     creditAccounts,
     totalAvailableBalance,
