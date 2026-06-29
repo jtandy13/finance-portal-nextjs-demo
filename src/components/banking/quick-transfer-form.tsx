@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { Send } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -22,6 +22,8 @@ type AccountOption = {
 
 type QuickTransferFormProps = {
   accounts: AccountOption[];
+  variant?: "card" | "embedded";
+  onSuccess?: () => void;
 };
 
 const initialState: TransferActionState = {};
@@ -35,21 +37,39 @@ function formatAccountLabel(account: AccountOption) {
   return `${account.name} (...${account.accountNumberLast4}) - ${formatCurrency(account.balance)}`;
 }
 
-export function QuickTransferForm({ accounts }: QuickTransferFormProps) {
+export function QuickTransferForm({
+  accounts,
+  variant = "card",
+  onSuccess,
+}: QuickTransferFormProps) {
   const [state, formAction, isPending] = useActionState(
     createTransfer,
     initialState,
   );
 
+  useEffect(() => {
+    if (state.success) {
+      onSuccess?.();
+    }
+  }, [state.success, onSuccess]);
+
   if (accounts.length < 2) {
+    const emptyMessage = (
+      <p className="text-sm text-muted-foreground">
+        Add at least two accounts to transfer funds.
+      </p>
+    );
+
+    if (variant === "embedded") {
+      return emptyMessage;
+    }
+
     return (
       <div className="rounded-lg border border-border bg-card">
         <div className="border-b border-border bg-surface-container-low px-6 py-4">
           <h2 className="text-xl font-semibold text-foreground">Quick Transfer</h2>
         </div>
-        <div className="px-6 py-10 text-sm text-muted-foreground">
-          Add at least two accounts to transfer funds.
-        </div>
+        <div className="px-6 py-10">{emptyMessage}</div>
       </div>
     );
   }
@@ -57,12 +77,7 @@ export function QuickTransferForm({ accounts }: QuickTransferFormProps) {
   const defaultFrom = accounts[0]?.id;
   const defaultTo = accounts[1]?.id;
 
-  return (
-    <div className="rounded-lg border border-border bg-card">
-      <div className="border-b border-border bg-surface-container-low px-6 py-4">
-        <h2 className="text-xl font-semibold text-foreground">Quick Transfer</h2>
-      </div>
-
+  const form = (
       <form action={formAction} className="flex flex-col gap-4 p-6">
         <div className="flex flex-col gap-2">
           <Label htmlFor="fromAccountId">From Account</Label>
@@ -137,6 +152,18 @@ export function QuickTransferForm({ accounts }: QuickTransferFormProps) {
           <Send data-icon="inline-end" />
         </Button>
       </form>
+  );
+
+  if (variant === "embedded") {
+    return <div className="[&_form]:p-0">{form}</div>;
+  }
+
+  return (
+    <div className="rounded-lg border border-border bg-card">
+      <div className="border-b border-border bg-surface-container-low px-6 py-4">
+        <h2 className="text-xl font-semibold text-foreground">Quick Transfer</h2>
+      </div>
+      {form}
     </div>
   );
 }

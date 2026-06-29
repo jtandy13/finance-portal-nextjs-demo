@@ -1,19 +1,28 @@
-import Link from "next/link";
 import { ArrowUp, TrendingUp } from "lucide-react";
 
+import { TransferFundsDialog } from "@/components/accounts/transfer-funds-dialog";
 import { Button } from "@/components/ui/button";
 import { formatCurrency, formatPercent } from "@/lib/format";
 import type { DayChange } from "@/lib/accounts/metrics";
 import { cn } from "@/lib/utils";
 
+type AccountOption = {
+  id: string;
+  name: string;
+  accountNumberLast4: string;
+  balance: string;
+};
+
 type TotalBalanceSummaryProps = {
   totalBalance: number;
   dayChange: DayChange | null;
+  accounts: AccountOption[];
 };
 
 export function TotalBalanceSummary({
   totalBalance,
   dayChange,
+  accounts,
 }: TotalBalanceSummaryProps) {
   const isPositive = dayChange ? dayChange.amount >= 0 : true;
 
@@ -54,9 +63,7 @@ export function TotalBalanceSummary({
         </div>
 
         <div className="flex flex-wrap gap-3">
-          <Button asChild>
-            <Link href="/everyday-banking">Transfer Funds</Link>
-          </Button>
+          <TransferFundsDialog accounts={accounts} />
           <Button variant="outline" disabled>
             Deposit
           </Button>
